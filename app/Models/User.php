@@ -2,17 +2,24 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Laravel\Passport\HasApiTokens;
 
 /**
- * User class
+ * App\Models\User
+ *
  * @property int $id
  * @property string $name
  * @property string $email
  * @property string $password
+ * @property Collection $gifs
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  */
 class User extends Authenticatable
 {
@@ -39,6 +46,11 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $dates = [
+        'created_at',
+        'updated_at'
+    ];
+
     /**
      * The attributes that should be cast.
      *
@@ -48,4 +60,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * @return BelongsToMany
+     */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(Gif::class, 'gif_user');
+    }
 }

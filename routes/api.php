@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GifController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::group([
+    'prefix' => '/gifs',
+    'middleware' => ['auth:api']
+], function () {
+    Route::get('/search', [GifController::class, 'search']);
+    Route::get('/get-by-id/{id}', [GifController::class, 'getById']);
+});
