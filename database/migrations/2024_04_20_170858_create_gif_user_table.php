@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('gif_user', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('gif_id')->nullable(true);
+            $table->unsignedBigInteger('gif_id')->nullable(false);
             $table->unsignedBigInteger('user_id')->nullable(false);
+            $table->string('alias')->nullable(false);
             $table->timestamps();
 
-            $table->foreign('gif_id')->references('id')->on('gifs')->onDelete('SET NULL');
+            $table->foreign('gif_id')->references('id')->on('gifs')->onDelete('CASCADE');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('CASCADE');
         });
     }

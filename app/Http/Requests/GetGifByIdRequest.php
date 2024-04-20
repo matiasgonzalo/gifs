@@ -23,7 +23,7 @@ class GetGifByIdRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'id' => ['required', 'alpha_num:ascii']
         ];
     }
 }

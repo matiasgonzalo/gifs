@@ -23,4 +23,5 @@ Route::group([
 ], function () {
     Route::get('/search', [GifController::class, 'search']);
     Route::get('/get-by-id/{id}', [GifController::class, 'getById']);
+    Route::post('/user/{id}', [GifController::class, 'store']);
 });

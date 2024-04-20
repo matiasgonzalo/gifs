@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class SearchGifRequest extends FormRequest
+class StoreGifRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,9 @@ class SearchGifRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'query' => ['required', 'string'],
-            'limit' => ['nullable', 'integer'],
-            'offset' => ['nullable', 'integer'],
+            'gif_id' => ['required', 'alpha_num:ascii'],
+            'user_id' => ['required', 'integer', 'exists:users,id'],
+            'alias' => ['required', 'string', 'max:250', 'min:1'],
         ];
     }
 }
