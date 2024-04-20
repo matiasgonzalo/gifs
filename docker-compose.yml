@@ -1,0 +1,53 @@
+version: "3.5"
+services:
+    webapp:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: gifs/app:1.0
+        container_name: gifs_webapp
+        working_dir: /var/www/html
+        environment:
+            - APACHE_RUN_DIR=/var/lock/apache2
+            - APACHE_PID_FILE=/var/run/apache2/apache2.pid
+            - APACHE_RUN_USER=www-data
+            - APACHE_RUN_GROUP=www-data
+            - APACHE_LOG_DIR=/var/log/apache2
+        volumes:
+            - .:/var/www/html:cached
+            - ./docker/${DOCKER_PHP_INI_FILE:-docker-php_custom.ini}:/usr/local/etc/php/conf.d/docker-php.ini:ro
+        command: >
+            bash -c "
+              echo -e '\033[0;32mINSTALLING COMPOSER PACKAGES\033[0m' &&
+              composer install --no-interaction --no-plugins &&
+              echo -e '\033[1;32mHAPPY CODING ;)\033[0m' &&
+              apache2 -D FOREGROUND
+            "
+        expose:
+            - 80
+        ports:
+            - 8098:80
+        networks:
+            - gifs
+
+    db:
+        image: mariadb:10.9-jammy
+        container_name: gifs_db
+        environment:
+            MARIADB_ROOT_PASSWORD: secret1
+            MARIADB_DATABASE: gifs
+        volumes:
+            - ./docker/docker-mariadb.conf:/etc/mariadb/mariadb.conf
+            - mariadbdata10.9:/var/lib/mariadb/data
+        ports:
+            - 3306:3306
+        networks:
+            - gifs
+
+networks:
+    gifs:
+        name: gifs
+
+volumes:
+    mariadbdata10.9:
+        name: mariadbdata10.9_gifs
