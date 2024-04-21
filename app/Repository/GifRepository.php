@@ -19,7 +19,7 @@ class GifRepository
      * @param string $id
      * @return Gif
      */
-    public function saveGif(string $id): Gif
+    public function storeGif(string $id): Gif
     {
         return Gif::create([
             'gif_id' => $id

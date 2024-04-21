@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -67,5 +68,13 @@ class User extends Authenticatable
     public function gifs(): BelongsToMany
     {
         return $this->belongsToMany(Gif::class, 'gif_user');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function apiRequests(): HasMany
+    {
+        return $this->hasMany(ApiRequest::class, 'user_id');
     }
 }

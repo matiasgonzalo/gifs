@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GetGifByIdRequest;
 use App\Http\Requests\SearchGifRequest;
 use App\Http\Requests\StoreGifRequest;
+use App\Repository\ApiRequestRepository;
 use App\Repository\GifRepository;
 use App\Repository\UserRepository;
 use App\Services\GifService;
@@ -17,13 +18,15 @@ class GifController extends Controller
     /**
      * @param SearchGifRequest $request
      * @param GifService $gifService
+     * @param ApiRequestRepository $apiRequestRepository
      * @return JsonResponse
      * @throws GuzzleException
      */
-    public function search(SearchGifRequest $request, GifService $gifService): JsonResponse
+    public function search(SearchGifRequest $request, GifService $gifService, ApiRequestRepository $apiRequestRepository): JsonResponse
     {
         try {
             $response = $gifService->search($request);
+            $apiRequestRepository->storeApiRequest($request, $response);
 
             return response()->json($response, 200);
         } catch (\Exception $e) {
@@ -34,13 +37,15 @@ class GifController extends Controller
     /**
      * @param GetGifByIdRequest $request
      * @param GifService $gifService
+     * @param ApiRequestRepository $apiRequestRepository
      * @return JsonResponse
      * @throws GuzzleException
      */
-    public function getById(GetGifByIdRequest $request, GifService $gifService): JsonResponse
+    public function getById(GetGifByIdRequest $request, GifService $gifService, ApiRequestRepository $apiRequestRepository): JsonResponse
     {
         try {
             $response = $gifService->getById($request);
+            $apiRequestRepository->storeApiRequest($request, $response);
 
             return response()->json($response);
         } catch (\Exception $e) {
@@ -64,7 +69,7 @@ class GifController extends Controller
             $user = $userRepository->getUserById($request->get('user_id'));
             $gif = $gifRepository->getGifById($request->get('gif_id'));
             if (!$gif) {
-                $gif = $gifRepository->saveGif($request->get('gif_id'));
+                $gif = $gifRepository->storeGif($request->get('gif_id'));
             }
             $userRepository->syncGif($user, $gif, $request->get('alias'));
             DB::commit();

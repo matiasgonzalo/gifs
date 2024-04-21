@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class GifService
 {
+    public const SERVICE_NAME = 'GIFS';
     private Client $client;
 
     public function __construct()

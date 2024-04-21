@@ -19,7 +19,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::group([
     'prefix' => '/gifs',
-    'middleware' => ['api']
+    'middleware' => ['auth:api']
 ], function () {
     Route::get('/search', [GifController::class, 'search']);
     Route::get('/get-by-id', [GifController::class, 'getById']);
