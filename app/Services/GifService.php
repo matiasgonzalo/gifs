@@ -4,6 +4,7 @@ namespace App\Services;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Psr\Http\Message\ResponseInterface;
 
@@ -23,33 +24,60 @@ class GifService
 
     /**
      * @param Request $request
-     * @return ResponseInterface
+     * @return JsonResponse
      * @throws GuzzleException
      */
-    public function search(Request $request): ResponseInterface
+    public function search(Request $request): JsonResponse
     {
-        return $this->client->request('GET', 'search', [
+        $response = $this->client->request('GET', 'search', [
             'query' => [
                 'api_key' => config('gif.api_key'),
                 'q' => $request->get('query'),
                 'limit' => $request->filled('limit') ? $request->get('limit') : config('gif.search.limit_default'),
                 'offset' => $request->filled('offset') ? $request->get('offset') : config('gif.search.offset_default'),
             ],
-            'headers' => [
-                'Accept' => 'application/json',
-            ]
+            'headers' => $this->getHeaders(),
         ]);
+
+        return $this->parseResponse($response);
     }
 
-    public function getById(Request $request)
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws GuzzleException
+     */
+    public function getById(Request $request): JsonResponse
     {
-        return $this->client->request('GET', $request->get('id'), [
+        $response = $this->client->request('GET', $request->get('id'), [
             'query' => [
                 'api_key' => config('gif.api_key'),
             ],
-            'headers' => [
-                'Accept' => 'application/json',
-            ]
+            'headers' => $this->getHeaders(),
         ]);
+
+        return $this->parseResponse($response);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getHeaders(): array
+    {
+        return [
+            'Accept' => 'application/json',
+        ];
+    }
+
+    private function parseResponse(ResponseInterface $response): JsonResponse
+    {
+        if ($response->getStatusCode() === 200) {
+            $data = json_decode($response->getBody(), true);
+            header('Content-Type: application/json');
+
+            return response()->json($data, 200);
+        }
+
+        return response()->json(['error' => 'Failed to fetch data'], $response->getStatusCode());
     }
 }
