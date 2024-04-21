@@ -10,6 +10,7 @@ use App\Repository\UserRepository;
 use App\Services\GifService;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class GifController extends Controller
 {
@@ -58,6 +59,7 @@ class GifController extends Controller
         UserRepository $userRepository,
         GifRepository $gifRepository
     ): JsonResponse {
+        DB::beginTransaction();
         try {
             $user = $userRepository->getUserById($request->get('user_id'));
             $gif = $gifRepository->getGifById($request->get('gif_id'));
@@ -65,9 +67,10 @@ class GifController extends Controller
                 $gif = $gifRepository->saveGif($request->get('gif_id'));
             }
             $userRepository->syncGif($user, $gif, $request->get('alias'));
-
+            DB::commit();
             return response()->json(['message' => 'Save Success', 'code' => 200], 200);
         } catch (\Exception $e) {
+            DB::rollback();
             return response()->json(['message' => $e->getMessage(), 'code' => $e->getCode()], $e->getCode());
         }
     }
