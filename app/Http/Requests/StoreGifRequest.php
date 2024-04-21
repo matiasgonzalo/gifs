@@ -28,4 +28,11 @@ class StoreGifRequest extends FormRequest
             'alias' => ['required', 'string', 'max:250', 'min:1'],
         ];
     }
+
+    public function prepareForValidation()
+    {
+        $this->merge([
+            'user_id' => $this->route('id')
+        ]);
+    }
 }

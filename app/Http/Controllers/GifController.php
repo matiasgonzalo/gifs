@@ -53,7 +53,7 @@ class GifController extends Controller
     ): Response {
         $user = $userRepository->getUserById($request->get('user_id'));
         $gif = $gifRepository->getGifById($request->get('gif_id'));
-        if ($gif) {
+        if (!$gif) {
             $gif = $gifRepository->saveGif($request->get('gif_id'));
         }
         $userRepository->syncGif($user, $gif, $request->get('alias'));
