@@ -64,7 +64,7 @@ class User extends Authenticatable
     /**
      * @return BelongsToMany
      */
-    public function users(): BelongsToMany
+    public function gifs(): BelongsToMany
     {
         return $this->belongsToMany(Gif::class, 'gif_user');
     }

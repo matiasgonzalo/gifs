@@ -17,7 +17,7 @@ class GifsTableSeeder extends Seeder
         foreach ($users as $user) {
             /** @var Gif $gif */
             $gif = Gif::factory()->create();
-            $user->gifs()->sync($gif->id);
+            $user->gifs()->sync([$gif->id => ['alias' => strtolower(str_replace('_', '', fake()->words(3, true)))]]);
         }
     }
 }

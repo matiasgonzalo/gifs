@@ -21,7 +21,7 @@ class AuthController extends Controller
         AuthService $authService
     ): JsonResponse {
         try {
-            $user = $userRepository->getUserById($request->get('email'));
+            $user = $userRepository->getUserByEmail($request->get('email'));
             $response = $authService->getToken($user, $request);
 
             return response()->json(['data' => $response], 200);
