@@ -14,7 +14,7 @@ class SaveGifTest extends TestCase
     /**
      * @test
      */
-    public function an_user_can_save_a_gif_with_user_gif_id_and_alias_params(): void
+    public function an_authenticated_user_can_save_a_gif_with_user_gif_id_and_alias_params(): void
     {
         $mati = User::factory()->create(['name' => 'Mati', 'email' => 'mati@gmail.com']);
         Passport::actingAs(
@@ -32,7 +32,7 @@ class SaveGifTest extends TestCase
     /**
      * @test
      */
-    public function an_user_cannot_save_a_gif_without_gif_id_param(): void
+    public function an_authenticated_user_cannot_save_a_gif_without_gif_id_param(): void
     {
         $mati = User::factory()->create(['name' => 'Mati', 'email' => 'mati@gmail.com']);
         Passport::actingAs(
@@ -50,7 +50,7 @@ class SaveGifTest extends TestCase
     /**
      * @test
      */
-    public function an_user_cannot_save_a_gif_without_alias_param(): void
+    public function an_authenticated_user_cannot_save_a_gif_without_alias_param(): void
     {
         $mati = User::factory()->create(['name' => 'Mati', 'email' => 'mati@gmail.com']);
         Passport::actingAs(

@@ -11,16 +11,22 @@ class SearchGifTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function setUp(): void
+    {
+        parent::setUp();
+        /** @var User user */
+        $this->user = User::factory()->create(['name' => 'Mati', 'email' => 'mati@gmail.com']);
+        Passport::actingAs(
+            $this->user,
+            ['create-servers']
+        );
+    }
+
     /**
      * @test
      */
-    public function an_user_can_search_a_gif_with_query_and_limit_params(): void
+    public function an_authenticated_user_can_search_a_gif_with_query_and_limit_params(): void
     {
-        $mati = User::factory()->create(['name' => 'Mati', 'email' => 'mati@gmail.com']);
-        Passport::actingAs(
-            $mati,
-            ['create-servers']
-        );
         $response = $this->getJson(route('gifs.search', [
             'query' => 'Mati',
             'limit' => 1
@@ -32,13 +38,8 @@ class SearchGifTest extends TestCase
     /**
      * @test
      */
-    public function an_user_cannot_search_a_gif_query_param_cannot_be_empty(): void
+    public function an_authenticated_user_cannot_search_a_gif_because_query_param_cannot_be_empty(): void
     {
-        $mati = User::factory()->create(['name' => 'Mati', 'email' => 'mati@gmail.com']);
-        Passport::actingAs(
-            $mati,
-            ['create-servers']
-        );
         $response = $this->getJson(route('gifs.search', [
             'limit' => 1
         ]));
@@ -50,17 +51,25 @@ class SearchGifTest extends TestCase
     /**
      * @test
      */
-    public function an_user_cannot_search_a_gif_query_limit_can_be_empty(): void
+    public function an_authenticated_user_can_search_a_gif_without_limit_param(): void
     {
-        $mati = User::factory()->create(['name' => 'Mati', 'email' => 'mati@gmail.com']);
-        Passport::actingAs(
-            $mati,
-            ['create-servers']
-        );
         $response = $this->getJson(route('gifs.search', [
             'query' => 'Mati'
         ]));
 
         $response->assertStatus(200);
+    }
+
+    /**
+     * @test
+     */
+    public function an_unauthenticated_user_cannot_search_a_gif(): void
+    {
+        $this->refreshApplication();
+        $response = $this->getJson(route('gifs.search', [
+            'query' => 'Mati'
+        ]));
+
+        $response->assertStatus(401);
     }
 }

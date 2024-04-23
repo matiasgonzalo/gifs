@@ -14,7 +14,7 @@ class GetByIdGifTest extends TestCase
     /**
      * @test
      */
-    public function an_user_can_get_by_id_a_gif_with_id_param(): void
+    public function an_authenticated_user_can_get_by_id_a_gif_with_id_param(): void
     {
         $mati = User::factory()->create(['name' => 'Mati', 'email' => 'mati@gmail.com']);
         Passport::actingAs(
@@ -32,7 +32,7 @@ class GetByIdGifTest extends TestCase
     /**
      * @test
      */
-    public function an_user_cannot_get_by_id_a_gif_without_id_param(): void
+    public function an_authenticated_user_cannot_get_by_id_a_gif_without_id_param(): void
     {
         $mati = User::factory()->create(['name' => 'Mati', 'email' => 'mati@gmail.com']);
         Passport::actingAs(

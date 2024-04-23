@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthService
@@ -18,8 +19,12 @@ class AuthService
     public function getToken(User $user, Request $request): array
     {
         try {
-            if (Hash::check($request['password'], $user->password)) {
-                $token = $user->createToken('Laravel Password Grant Client')->accessToken;
+            $credentials = [
+                'email' => $request['email'],
+                'password' => $request['password']
+            ];
+            if (Hash::check($request['password'], $user->password) && Auth::attempt($credentials)) {
+                $token = Auth::user()->createToken('Laravel Password Grant Client')->accessToken;
 
                 return [
                     'id' => $user->id,
