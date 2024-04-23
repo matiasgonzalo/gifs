@@ -7,60 +7,89 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+## Sobre el proyeto
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Este proyecto se integra a una API existente [GHIPY](https://developers.giphy.com/docs/api/#quick-start-guide) y expone a través de endpoint algunos de sus servicios.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Esta aplicación es una API RESTFull.
+- Brinda los siguientes servicios a partir de endpoints 
+  - login para poder utilizar los servicios.
+  - search para buscar un gif utilizando palabras que hagan match con alguna propiedad de los mismos.
+  - getById para obtener un gif específico.
+  - save para guardar el id de un gif y vincularlo al usuario.
+## Diagrama de secuencia
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+<p align="center"><img src="public/assets/img/Caso de uso.drawio.png"/></p>
 
-## Learning Laravel
+## Características esenciales 
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- El proyecto cuenta con la configuración necesaria para realizar el deploy mediante DOCKER-COMPOSE.
+- El proyecto cuenta con la configuración necesaria en el archivo .env.example para acceder a una base de datos MariaDB dentro del contenedor.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Packages adicionales
+- **laravel/passport**
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Despliegue
+- Tener instalado y configurado docker y docker-compose en el entorno a realizar el despliegue.
+- Clonar el repositorio en el directorio deseado ``git clone git@github.com:matiasgonzalo/gifs.git matiAcostaGifsProyect``
+- Acceder al directorio del proyecto y copiar el archivo **.env.example** y renombrarlo por **.env**
+- Construir y levantar el contenedor con los recursos necesarios ``docker-compose up -d``
+- Ingresar al directorio del proyecto y luego al contenedor ``docker-compose exec webapp bash``
+- Instalar dependencias: ``composer install``
+- Ejecutar ``php artisan key:generate``
+- Ejecutar migraciones y seeders con datos de prueba: ``php artisan migrate --seed``
+- Instalar passport: ``php artisan passport:install`
+- Se creará el usuario **matias@gmail.com** y **melanie@gmail.com** con la password ``password``
 
-## Laravel Sponsors
+## Diagramas de secuencia
+#### Login
+<p align="center"><img src="public/assets/img/Diagrama de secuencia login.png"/></p>
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+#### Search
+<p align="center"><img src="public/assets/img/Diagrama de secuencia search.png"/></p>
 
-### Premium Partners
+#### GetById
+<p align="center"><img src="public/assets/img/Diagrama de secuencia getById.png"/></p>
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+#### store
+<p align="center"><img src="public/assets/img/Diagrama de secuencia store.png"/></p>
 
-## Contributing
+#### DER
+<p align="center"><img src="public/assets/img/DER.png"/></p>
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Postman Collection
 
-## Code of Conduct
+- **[Link](https://app.getpostman.com/join-team?invite_code=fffe514ceb3c17f49526fdfb1b2febd1&target_code=90656fcf47b501afca75ad68a5589139)**
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+#### Descripción de Endpoints
 
-## Security Vulnerabilities
+- Se realiza el login de usuario (POST): **[http://localhost:8098/api/v1/login](http://localhost:8095/api/v1/login)**
+- Ejemplo:
+`curl --location 'http://localhost:8098/api/v1/login' \
+  --header 'Accept: application/vnd.api+json' \
+  --form 'email="matias@gmail.com"' \
+  --form 'password="password"'`
+- Se realiza la búsqueda de gifs (GET): **[http://localhost:8098/api/v1/gifs/search?query=Mati&limit=1](http://localhost:8098/api/v1/gifs/search?query=Mati&limit=1)**
+- Ejemplo:
+`curl --location 'http://localhost:8098/api/v1/gifs/search?query=Mati&limit=1' \
+  --header 'Accept: application/vnd.api+json' \
+  --header 'Authorization: BearerToken`
+- Se realiza la búsqueda de un gif específico (GET): **[http://localhost:8098/api/v1/gifs/get-by-id?id=APqEbxBsVlkWSuFpth](http://localhost:8098/api/v1/gifs/get-by-id?id=APqEbxBsVlkWSuFpth)**
+`curl --location 'http://localhost:8098/api/v1/gifs/get-by-id?id=APqEbxBsVlkWSuFpth' \
+  --header 'Accept: application/json' \
+  --header 'Authorization: BearerToken`
+- Se guarda el id de un gif y se lo vincula al usuario autenticado (POST): **[http://localhost:8098/api/v1/gifs/user/1](http://localhost:8098/api/v1/gifs/user/1)**
+`curl --location 'http://localhost:8098/api/v1/gifs/user/1' \
+  --header 'Accept: application/json' \
+  --header 'Authorization: BearerToken`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Tests
 
-## License
+- Acceder al contenedor: ``docker-compose exec webapp bash``
+- Ejecutar todos los test automáticos: ``./vendor/bin/phpunit``
+- Ejecutar test de clases especificas: ``./vendor/bin/phpunit --filter GetByIdGifTest``
+- Ejecutar test de funciones especificas: ``./vendor/bin/phpunit --filter GetByIdGifTest::an_authenticated_user_can_get_by_id_a_gif_with_id_param``
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Autor
+
+Este proyecto fue desarrollado por [Acosta Matias Gonzalo](https://github.com/matiasgonzalo)

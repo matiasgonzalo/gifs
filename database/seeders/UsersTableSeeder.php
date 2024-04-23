@@ -22,11 +22,6 @@ class UsersTableSeeder extends Seeder
              'email' => 'matias@gmail.com',
         ]);
 
-        User::factory()->create([
-             'name' => 'Gonzalo',
-             'email' => 'gonzalo@gmail.com',
-        ]);
-
         User::factory(10)->create();
     }
 }
