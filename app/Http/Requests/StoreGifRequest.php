@@ -24,15 +24,7 @@ class StoreGifRequest extends FormRequest
     {
         return [
             'gif_id' => ['required', 'alpha_num:ascii'],
-            'user_id' => ['required', 'integer', 'exists:users,id'],
             'alias' => ['required', 'string', 'max:250', 'min:1'],
         ];
-    }
-
-    public function prepareForValidation()
-    {
-        $this->merge([
-            'user_id' => $this->route('id')
-        ]);
     }
 }

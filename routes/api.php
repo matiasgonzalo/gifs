@@ -21,7 +21,7 @@ Route::group([
     'prefix' => '/gifs',
     'middleware' => ['auth:api']
 ], function () {
-    Route::get('/search', [GifController::class, 'search']);
-    Route::get('/get-by-id', [GifController::class, 'getById']);
-    Route::post('/user/{id}', [GifController::class, 'store']);
+    Route::get('/search', [GifController::class, 'search'])->name('gifs.search');
+    Route::get('/get-by-id', [GifController::class, 'getById'])->name('gifs.getById');
+    Route::post('/user/{user}', [GifController::class, 'store'])->name('gifs.save');
 });

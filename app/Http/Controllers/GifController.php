@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GetGifByIdRequest;
 use App\Http\Requests\SearchGifRequest;
 use App\Http\Requests\StoreGifRequest;
+use App\Models\User;
 use App\Repository\ApiRequestRepository;
 use App\Repository\GifRepository;
 use App\Repository\UserRepository;
@@ -15,20 +16,38 @@ use Illuminate\Support\Facades\DB;
 
 class GifController extends Controller
 {
+    public GifService $gifService;
+    public ApiRequestRepository $apiRequestRepository;
+    public GifRepository $gifRepository;
+    public UserRepository $userRepository;
+    public JsonResponse $jsonResponse;
+
+    public function __construct(GifService $gifService,
+        ApiRequestRepository $apiRequestRepository,
+        GifRepository $gifRepository,
+        UserRepository $userRepository,
+        JsonResponse $jsonResponse
+    )
+    {
+        $this->gifService = $gifService;
+        $this->apiRequestRepository = $apiRequestRepository;
+        $this->gifRepository = $gifRepository;
+        $this->userRepository = $userRepository;
+        $this->jsonResponse = $jsonResponse;
+    }
+
     /**
      * @param SearchGifRequest $request
-     * @param GifService $gifService
-     * @param ApiRequestRepository $apiRequestRepository
      * @return JsonResponse
      * @throws GuzzleException
      */
-    public function search(SearchGifRequest $request, GifService $gifService, ApiRequestRepository $apiRequestRepository): JsonResponse
+    public function search(SearchGifRequest $request): JsonResponse
     {
         try {
-            $response = $gifService->search($request);
-            $apiRequestRepository->storeApiRequest($request, $response);
+            $response = $this->gifService->search($request);
+            $this->apiRequestRepository->storeApiRequest($request, $response);
 
-            return response()->json($response, 200);
+            return $this->jsonResponse->setData($response);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'code' => $e->getCode()], $e->getCode());
         }
@@ -36,47 +55,44 @@ class GifController extends Controller
 
     /**
      * @param GetGifByIdRequest $request
-     * @param GifService $gifService
-     * @param ApiRequestRepository $apiRequestRepository
      * @return JsonResponse
      * @throws GuzzleException
      */
-    public function getById(GetGifByIdRequest $request, GifService $gifService, ApiRequestRepository $apiRequestRepository): JsonResponse
+    public function getById(GetGifByIdRequest $request): JsonResponse
     {
         try {
-            $response = $gifService->getById($request);
-            $apiRequestRepository->storeApiRequest($request, $response);
+            $response = $this->gifService->getById($request);
+            $this->apiRequestRepository->storeApiRequest($request, $response);
 
-            return response()->json($response);
+            return $this->jsonResponse->setData($response);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'code' => $e->getCode()], $e->getCode());
+            $this->jsonResponse->setData(['message' => $e->getMessage(), 'code' => $e->getCode()]);
+            return $this->jsonResponse->setStatusCode($e->getCode());
         }
     }
 
     /**
      * @param StoreGifRequest $request
-     * @param UserRepository $userRepository
-     * @param GifRepository $gifRepository
+     * @param User $user
      * @return JsonResponse
      */
     public function store(
         StoreGifRequest $request,
-        UserRepository $userRepository,
-        GifRepository $gifRepository
+        User $user
     ): JsonResponse {
         DB::beginTransaction();
         try {
-            $user = $userRepository->getUserById($request->get('user_id'));
-            $gif = $gifRepository->getGifById($request->get('gif_id'));
+            $gif = $this->gifRepository->getGifById($request->get('gif_id'));
             if (!$gif) {
-                $gif = $gifRepository->storeGif($request->get('gif_id'));
+                $gif = $this->gifRepository->storeGif($request->get('gif_id'));
             }
-            $userRepository->syncGif($user, $gif, $request->get('alias'));
+            $this->userRepository->syncGif($user, $gif, $request->get('alias'));
             DB::commit();
-            return response()->json(['message' => 'Save Success', 'code' => 200], 200);
+            return $this->jsonResponse->setData(['message' => 'Save Success', 'code' => 200]);
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['message' => $e->getMessage(), 'code' => $e->getCode()], $e->getCode());
+            $this->jsonResponse->setData(['message' => $e->getMessage(), 'code' => $e->getCode()]);
+            return $this->jsonResponse->setStatusCode(500);
         }
     }
 }
