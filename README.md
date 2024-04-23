@@ -59,7 +59,8 @@ Este proyecto se integra a una API existente [GHIPY](https://developers.giphy.co
 
 ### Postman Collection
 
-- **[Link](https://app.getpostman.com/join-team?invite_code=fffe514ceb3c17f49526fdfb1b2febd1&target_code=90656fcf47b501afca75ad68a5589139)**
+- **[Link Invite](https://app.getpostman.com/join-team?invite_code=fffe514ceb3c17f49526fdfb1b2febd1&target_code=90656fcf47b501afca75ad68a5589139)**
+- **[Link a la colección abierta](https://www.postman.com/supermarket2022/workspace/gifs/overview)**
 
 #### Descripción de Endpoints
 
