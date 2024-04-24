@@ -84,6 +84,20 @@ Este proyecto se integra a una API existente [GHIPY](https://developers.giphy.co
   --header 'Accept: application/json' \
   --header 'Authorization: BearerToken`
 
+#### Confiración de guardado automático de token
+
+- Si no es posible visualizar la colección en postman, es posible importar las peticiones curl ingresando al menú ``File->import``
+- Para configurar el guardado automático de token es necesario:
+  - Crear la variable de entorno ``bearer_token``
+  - Ingresar en postman al enpoint ``login`` en la carpeta User.
+  - Ingresar a la pestaña ``Tests`` y pergar el siguiente código:
+  ``var extractedData = pm.response.json();
+    postman.setEnvironmentVariable("bearer_token",  extractedData.data.access_token);``
+  - En todos los endpoints:
+    - Seleccionar la pestaña Authorization
+    - Seleccionar el type Bearer Token
+    - Pegar la variable ``{{bearer_token}}``
+
 ## Tests
 
 - Acceder al contenedor: ``docker-compose exec webapp bash``

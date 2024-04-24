@@ -16,25 +16,14 @@ use Illuminate\Support\Facades\DB;
 
 class GifController extends Controller
 {
-    public GifService $gifService;
-    public ApiRequestRepository $apiRequestRepository;
-    public GifRepository $gifRepository;
-    public UserRepository $userRepository;
-    public JsonResponse $jsonResponse;
-
-    public function __construct(GifService $gifService,
-        ApiRequestRepository $apiRequestRepository,
-        GifRepository $gifRepository,
-        UserRepository $userRepository,
-        JsonResponse $jsonResponse
+    public function __construct(
+        public GifService $gifService,
+        public ApiRequestRepository $apiRequestRepository,
+        public GifRepository $gifRepository,
+        public UserRepository $userRepository,
+        public JsonResponse $jsonResponse
     )
-    {
-        $this->gifService = $gifService;
-        $this->apiRequestRepository = $apiRequestRepository;
-        $this->gifRepository = $gifRepository;
-        $this->userRepository = $userRepository;
-        $this->jsonResponse = $jsonResponse;
-    }
+    {}
 
     /**
      * @param SearchGifRequest $request
