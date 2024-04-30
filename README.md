@@ -17,9 +17,9 @@ Este proyecto se integra a una API existente [GHIPY](https://developers.giphy.co
   - search para buscar un gif utilizando palabras que hagan match con alguna propiedad de los mismos.
   - getById para obtener un gif específico.
   - save para guardar el id de un gif y vincularlo al usuario.
-## Diagrama de secuencia
+## Diagrama de caso de uso
 
-<p align="center"><img src="public/assets/img/Caso de uso.drawio.png"/></p>
+<p align="center"><img src="public/assets/img/Diagrama de caso de uso.png" alt="Diagrama de caso de uso"/></p>
 
 ## Características esenciales 
 
@@ -43,16 +43,16 @@ Este proyecto se integra a una API existente [GHIPY](https://developers.giphy.co
 
 ## Diagramas de secuencia
 #### Login
-<p align="center"><img src="public/assets/img/Diagrama de secuencia login.png"/></p>
+<p align="center"><img src="public/assets/img/Diagrama de secuencia login.png" alt="Diagrama de secuencia login"/></p>
 
 #### Search
-<p align="center"><img src="public/assets/img/Diagrama de secuencia search.png"/></p>
+<p align="center"><img src="public/assets/img/Diagrama de secuencia search.png" alt="Diagrama de secuencia search"/></p>
 
 #### GetById
-<p align="center"><img src="public/assets/img/Diagrama de secuencia getById.png"/></p>
+<p align="center"><img src="public/assets/img/Diagrama de secuencia getById.png" alt="Diagrama de secuencia getById"/></p>
 
 #### store
-<p align="center"><img src="public/assets/img/Diagrama de secuencia store.png"/></p>
+<p align="center"><img src="public/assets/img/Diagrama de secuencia store.png" alt="Diagrama de secuencia store"/></p>
 
 #### DER
 <p align="center"><img src="public/assets/img/DER.png"/></p>
